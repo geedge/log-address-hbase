@@ -40,6 +40,7 @@ public class SubcribeIdBolt extends BaseBasicBolt {
         try {
             connection = ConnectionFactory.createConnection(configuration);
         } catch (IOException e) {
+            logger.error("连接HBase异常");
             e.printStackTrace();
         }
     }
@@ -60,8 +61,8 @@ public class SubcribeIdBolt extends BaseBasicBolt {
                 String message = tuple.getString(0);
                 if (StringUtil.isNotBlank(message)) {
                     JSONObject jsonObject = JSONObject.parseObject(message);
-                    String ip = jsonObject.getString("framed_ip");
-                    String account = jsonObject.getString("account");
+                    String ip = jsonObject.getString("radius_framed_ip");
+                    String account = jsonObject.getString("radius_account");
                     dataValidation(ip, account, putList);
                     if (putList.size() == AddressConfig.LIST_SIZE_MAX) {
                         insertData(putList);
@@ -69,7 +70,8 @@ public class SubcribeIdBolt extends BaseBasicBolt {
                 }
             }
         } catch (Exception e) {
-            logger.error("Radius写入Redis出现异常", e);
+            logger.error("Radius 日志解析/更新HBase 失败!");
+            e.printStackTrace();
         }
 
     }
@@ -103,6 +105,7 @@ public class SubcribeIdBolt extends BaseBasicBolt {
             }
             scanner.close();
         } catch (IOException e) {
+            logger.error("获取HBase所有rowkey出现异常");
             e.printStackTrace();
         }
     }
@@ -124,6 +127,7 @@ public class SubcribeIdBolt extends BaseBasicBolt {
                     table.close();
                 }
             } catch (IOException e) {
+                logger.error("更新数据写入HBase失败");
                 e.printStackTrace();
             }
         }
@@ -138,8 +142,6 @@ public class SubcribeIdBolt extends BaseBasicBolt {
      */
     private static void dataValidation(String ip, String account, List<Put> putList) {
         if (StringUtil.isNotBlank(ip) && StringUtil.isNotBlank(account)) {
-//            String s = ip.split("\\.")[0];
-//            if (!AddressConfig.CHECK_IP_SCOPE.contains(s)) {
             if (subIdMap.containsKey(ip)) {
                 if (!subIdMap.get(ip).equals(account)) {
                     Put put = new Put(ip.getBytes());
@@ -153,7 +155,6 @@ public class SubcribeIdBolt extends BaseBasicBolt {
                 putList.add(put);
                 subIdMap.put(ip, account);
             }
-//            }
         }
     }
 }

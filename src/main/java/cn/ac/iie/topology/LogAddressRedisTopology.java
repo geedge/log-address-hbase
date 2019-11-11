@@ -1,7 +1,6 @@
 package cn.ac.iie.topology;
 
 import cn.ac.iie.bolt.SubcribeIdBolt;
-import cn.ac.iie.bolt.ToHBaseBolt;
 import cn.ac.iie.common.AddressConfig;
 import cn.ac.iie.spout.CustomizedKafkaSpout;
 import org.apache.storm.Config;
@@ -57,8 +56,6 @@ public class LogAddressRedisTopology {
         builder = new TopologyBuilder();
         builder.setSpout("CustomizedKafkaSpout", new CustomizedKafkaSpout(), AddressConfig.SPOUT_PARALLELISM);
         builder.setBolt("SubcribeIdBolt", new SubcribeIdBolt(), AddressConfig.FORMAT_BOLT_PARALLELISM).localOrShuffleGrouping("CustomizedKafkaSpout");
-//        builder.setBolt("ToHBaseBolt", new ToHBaseBolt(), 1).localOrShuffleGrouping("SubcribeIdBolt");
-
     }
 
     public static void main(String[] args) throws Exception {
