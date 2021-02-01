@@ -1,6 +1,6 @@
 package cn.ac.iie.test;
 
-import cn.ac.iie.common.AddressConfig;
+import cn.ac.iie.common.SubscriberConfig;
 import com.zdjizhi.utils.StringUtil;
 
 public class subTest {
@@ -24,7 +24,7 @@ public class subTest {
     private static boolean dataValidation(String ip, String account) {
         if (StringUtil.isNotBlank(ip) && StringUtil.isNotBlank(account)) {
             String s = ip.split("\\.")[0];
-            return !AddressConfig.CHECK_IP_SCOPE.contains(s);
+            return !SubscriberConfig.CHECK_IP_SCOPE.contains(s);
         }
         return false;
     }

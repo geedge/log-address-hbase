@@ -9,6 +9,9 @@ import org.apache.storm.generated.AuthorizationException;
 import org.apache.storm.generated.InvalidTopologyException;
 import org.apache.storm.topology.TopologyBuilder;
 
+/**
+ * @author qidaijie
+ */
 public final class StormRunner{
 	private static final int MILLS_IN_SEC = 1000;
 	

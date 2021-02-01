@@ -1,6 +1,6 @@
 package cn.ac.iie.test;
 
-import cn.ac.iie.common.AddressConfig;
+import cn.ac.iie.common.SubscriberConfig;
 import com.alibaba.fastjson.JSONObject;
 import com.zdjizhi.utils.StringUtil;
 import org.apache.hadoop.conf.Configuration;
@@ -35,7 +35,7 @@ public class SubcribeIdBoltone extends BaseBasicBolt {
         // 管理Hbase的配置信息
         Configuration configuration = HBaseConfiguration.create();
         // 设置zookeeper节点
-        configuration.set("hbase.zookeeper.quorum", AddressConfig.HBASE_ZOOKEEPER_SERVERS);
+        configuration.set("hbase.zookeeper.quorum", SubscriberConfig.HBASE_ZOOKEEPER_SERVERS);
         try {
             connection = ConnectionFactory.createConnection(configuration);
         } catch (IOException e) {
@@ -76,7 +76,7 @@ public class SubcribeIdBoltone extends BaseBasicBolt {
      */
     private static void getAll() {
         try {
-            Table table = connection.getTable(TableName.valueOf("sub:" + AddressConfig.HBASE_TABLE_NAME));
+            Table table = connection.getTable(TableName.valueOf("sub:" + SubscriberConfig.HBASE_TABLE_NAME));
             Scan scan2 = new Scan();
             ResultScanner scanner = table.getScanner(scan2);
             for (Result result : scanner) {
@@ -101,7 +101,7 @@ public class SubcribeIdBoltone extends BaseBasicBolt {
     private static void dataValidation(String ip, String account, BasicOutputCollector collector) {
         if (StringUtil.isNotBlank(ip) && StringUtil.isNotBlank(account)) {
 //            String s = ip.split("\\.")[0];
-//            if (!AddressConfig.CHECK_IP_SCOPE.contains(s)) {
+//            if (!SubscriberConfig.CHECK_IP_SCOPE.contains(s)) {
             if (subIdMap.containsKey(ip)) {
                 if (!subIdMap.get(ip).equals(account)) {
                     subIdMap.put(ip, account);

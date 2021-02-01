@@ -1,6 +1,6 @@
 package cn.ac.iie.spout;
 
-import cn.ac.iie.common.AddressConfig;
+import cn.ac.iie.common.SubscriberConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -29,9 +29,9 @@ public class CustomizedKafkaSpout extends BaseRichSpout {
 
     private static Properties createConsumerConfig() {
         Properties props = new Properties();
-        props.put("bootstrap.servers", AddressConfig.BOOTSTRAP_SERVERS);
-        props.put("group.id", AddressConfig.GROUP_ID);
-        props.put("auto.offset.reset", AddressConfig.AUTO_OFFSET_RESET);
+        props.put("bootstrap.servers", SubscriberConfig.BOOTSTRAP_SERVERS);
+        props.put("group.id", SubscriberConfig.GROUP_ID);
+        props.put("auto.offset.reset", SubscriberConfig.AUTO_OFFSET_RESET);
         props.put("session.timeout.ms", "60000");
         props.put("max.poll.records", 3000);
         props.put("max.partition.fetch.bytes", 31457280);
@@ -47,7 +47,7 @@ public class CustomizedKafkaSpout extends BaseRichSpout {
         this.context = context;
         Properties prop = createConsumerConfig();
         this.consumer = new KafkaConsumer<>(prop);
-        this.consumer.subscribe(Arrays.asList(AddressConfig.KAFKA_TOPIC));
+        this.consumer.subscribe(Arrays.asList(SubscriberConfig.KAFKA_TOPIC));
     }
 
     @Override
